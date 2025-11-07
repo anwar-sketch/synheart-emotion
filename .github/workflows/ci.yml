@@ -196,8 +196,10 @@ jobs:
         working-directory: examples/flutter
         run: |
           echo "Working directory: $(pwd)"
-          echo "Resolved SDK path:"
-          realpath ../../sdks/flutter || echo "realpath failed, trying ls:"
+          echo "Repository root: ${{ github.workspace }}"
+          echo "Checking if SDK exists at absolute path:"
+          ls -la ${{ github.workspace }}/sdks/flutter/pubspec.yaml || exit 1
+          echo "Checking relative path from example:"
           ls -la ../../sdks/flutter/pubspec.yaml || exit 1
           echo "Running flutter pub get..."
           flutter pub get
