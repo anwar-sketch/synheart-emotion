@@ -3,7 +3,6 @@ import 'emotion_config.dart';
 import 'emotion_result.dart';
 import 'emotion_error.dart';
 import 'features.dart';
-import 'model_linear_svm.dart';
 
 /// Data point for ring buffer
 class _DataPoint {
