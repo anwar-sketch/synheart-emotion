@@ -1,6 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:synheart_emotion/synheart_emotion.dart';
 
+/// Mock model for testing
+class _MockEmotionModel {
+  Future<Map<String, double>> predictAsync(Map<String, double> features) async {
+    // Return mock probabilities
+    return {
+      'Calm': 0.6,
+      'Stressed': 0.3,
+      'Amused': 0.1,
+    };
+  }
+
+  Map<String, double> predict(Map<String, double> features) {
+    // Return mock probabilities
+    return {
+      'Calm': 0.6,
+      'Stressed': 0.3,
+      'Amused': 0.1,
+    };
+  }
+
+  Map<String, dynamic> getMetadata() {
+    return {
+      'id': 'mock_model',
+      'version': '1.0',
+    };
+  }
+
+  @override
+  String toString() => 'OnnxEmotionModel';
+}
+
 void main() {
   group('FeatureExtractor', () {
     test('extractHrMean calculates correct mean', () {
@@ -105,6 +136,17 @@ void main() {
     });
 
     test('consumeReady returns results when enough data', () async {
+      // Create a mock model for testing
+      final mockModel = _MockEmotionModel();
+      engine = EmotionEngine.fromPretrained(
+        const EmotionConfig(
+          window: Duration(seconds: 10),
+          step: Duration(seconds: 1),
+          minRrCount: 5,
+        ),
+        model: mockModel,
+      );
+
       // Add enough data points
       for (var i = 0; i < 3; i++) {
         engine.push(
