@@ -85,7 +85,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        flutter-version: ['3.10.0', '3.27.0']
+        flutter-version: ['3.27.0']
       fail-fast: false
 
     steps:
