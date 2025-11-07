@@ -10,8 +10,10 @@ void main() {
     test('package exports are available', () {
       // Verify that core classes are exported
       expect(() => EmotionConfig(), returnsNormally);
-      expect(() => EmotionEngine.fromPretrained(const EmotionConfig()),
-          returnsNormally);
+      expect(
+        () => EmotionEngine.fromPretrained(const EmotionConfig()),
+        returnsNormally,
+      );
     });
   });
 }

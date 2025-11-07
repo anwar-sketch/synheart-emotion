@@ -51,8 +51,11 @@ void main() {
       final mu = {'hr_mean': 70.0, 'sdnn': 40.0};
       final sigma = {'hr_mean': 10.0, 'sdnn': 5.0};
 
-      final normalized =
-          FeatureExtractor.normalizeFeatures(features, mu, sigma);
+      final normalized = FeatureExtractor.normalizeFeatures(
+        features,
+        mu,
+        sigma,
+      );
 
       expect(normalized['hr_mean'], equals(1.0)); // (80-70)/10
       expect(normalized['sdnn'], equals(2.0)); // (50-40)/5

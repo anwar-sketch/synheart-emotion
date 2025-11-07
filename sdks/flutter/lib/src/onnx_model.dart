@@ -24,8 +24,8 @@ class OnnxEmotionModel {
     required this.classNames,
     required OrtSession session,
     required Map<String, dynamic> metadata,
-  })  : _session = session,
-        _metadata = metadata;
+  }) : _session = session,
+       _metadata = metadata;
 
   /// Load ONNX model from assets
   static Future<OnnxEmotionModel> loadFromAsset({
@@ -106,9 +106,10 @@ class OnnxEmotionModel {
       final inputTensor = await OrtValue.fromList(inputData, inputShape);
 
       // Get input name from session or use default
-      final inputName = _session.inputNames.isNotEmpty
-          ? _session.inputNames.first
-          : 'float_input';
+      final inputName =
+          _session.inputNames.isNotEmpty
+              ? _session.inputNames.first
+              : 'float_input';
 
       // Run inference
       final inputs = {inputName: inputTensor};
@@ -117,7 +118,7 @@ class OnnxEmotionModel {
       // ExtraTrees ONNX models output: [label, probabilities] or [probabilities, label]
       // We need to find the output with key "probabilities"
       List<double> probabilities;
-      
+
       if (outputs.length >= 2) {
         // Model has both label and probabilities outputs
         // Find the one actually named "probabilities"
@@ -128,39 +129,45 @@ class OnnxEmotionModel {
             break;
           }
         }
-        
+
         if (probsKey == null) {
           throw EmotionError.badInput('Could not find probabilities output');
         }
-        
+
         final probsValue = outputs[probsKey]!;
         final probsData = await probsValue.asList();
-        
+
         // Handle the shape (1, 3) - first dimension is batch, second is classes
         if (probsData is List && probsData.isNotEmpty) {
           if (probsData[0] is List) {
             // Nested list [[p1, p2, p3]] - extract inner list
             final innerList = probsData[0] as List;
-            probabilities = innerList.map((e) => (e as num).toDouble()).toList();
+            probabilities =
+                innerList.map((e) => (e as num).toDouble()).toList();
           } else {
             // Flat list [p1, p2, p3] - use directly
-            probabilities = probsData.map((e) => (e as num).toDouble()).toList();
+            probabilities =
+                probsData.map((e) => (e as num).toDouble()).toList();
           }
         } else {
-          throw EmotionError.badInput('Unexpected probabilities structure: empty or invalid');
+          throw EmotionError.badInput(
+            'Unexpected probabilities structure: empty or invalid',
+          );
         }
       } else {
         // Fallback: use first output (shouldn't happen with ExtraTrees)
         final outputKey = outputs.keys.first;
         final outputValue = outputs[outputKey]!;
         final outputData = await outputValue.asList();
-        
+
         if (outputData is List && outputData.isNotEmpty) {
           if (outputData[0] is List) {
             final innerList = outputData[0] as List;
-            probabilities = innerList.map((e) => (e as num).toDouble()).toList();
+            probabilities =
+                innerList.map((e) => (e as num).toDouble()).toList();
           } else {
-            probabilities = outputData.map((e) => (e as num).toDouble()).toList();
+            probabilities =
+                outputData.map((e) => (e as num).toDouble()).toList();
           }
         } else {
           throw EmotionError.badInput('Unexpected output structure');
@@ -224,15 +231,15 @@ class OnnxEmotionModel {
 
   /// Get model metadata
   Map<String, dynamic> getMetadata() => {
-        'id': modelId,
-        'type': 'onnx',
-        'labels': classNames,
-        'feature_names': inputNames,
-        'num_classes': classNames.length,
-        'num_features': inputNames.length,
-        'format': _metadata['format'],
-        'created_utc': _metadata['created_utc'],
-      };
+    'id': modelId,
+    'type': 'onnx',
+    'labels': classNames,
+    'feature_names': inputNames,
+    'num_classes': classNames.length,
+    'num_features': inputNames.length,
+    'format': _metadata['format'],
+    'created_utc': _metadata['created_utc'],
+  };
 
   /// Validate model integrity
   bool validate() {
