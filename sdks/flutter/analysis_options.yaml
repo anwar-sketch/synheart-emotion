@@ -186,3 +186,4 @@ analyzer:
     - "**/*.freezed.dart"
     - "build/**"
     - "lib/generated/**"
+    - "example/**"
