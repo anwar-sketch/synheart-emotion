@@ -3,30 +3,16 @@ import 'package:synheart_emotion/synheart_emotion.dart';
 
 /// Mock model for testing
 class _MockEmotionModel {
-  Future<Map<String, double>> predictAsync(Map<String, double> features) async {
-    // Return mock probabilities
-    return {
-      'Calm': 0.6,
-      'Stressed': 0.3,
-      'Amused': 0.1,
-    };
-  }
+  Future<Map<String, double>> predictAsync(
+    Map<String, double> features,
+  ) async =>
+      {'Calm': 0.6, 'Stressed': 0.3, 'Amused': 0.1};
 
-  Map<String, double> predict(Map<String, double> features) {
-    // Return mock probabilities
-    return {
-      'Calm': 0.6,
-      'Stressed': 0.3,
-      'Amused': 0.1,
-    };
-  }
+  Map<String, double> predict(Map<String, double> features) =>
+      {'Calm': 0.6, 'Stressed': 0.3, 'Amused': 0.1};
 
-  Map<String, dynamic> getMetadata() {
-    return {
-      'id': 'mock_model',
-      'version': '1.0',
-    };
-  }
+  Map<String, dynamic> getMetadata() =>
+      {'id': 'mock_model', 'version': '1.0'};
 
   @override
   String toString() => 'OnnxEmotionModel';
@@ -203,7 +189,7 @@ void main() {
         timestamp: DateTime(2023, 1, 1, 12),
         probabilities: {'Calm': 0.8, 'Stressed': 0.2},
         features: {'hr_mean': 70.0},
-        model: {'id': 'test'},
+        model: const {'id': 'test'},
       );
 
       final json = original.toJson();
