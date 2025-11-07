@@ -10,7 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:emotion_example/main.dart';
 
 void main() {
-  testWidgets('App loads and displays emotion demo', (WidgetTester tester) async {
+  testWidgets('App loads and displays emotion demo',
+      (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const EmotionExampleApp());
 
