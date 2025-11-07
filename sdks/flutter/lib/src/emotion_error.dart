@@ -1,10 +1,5 @@
 /// Errors that can occur during emotion inference
-abstract class EmotionError {
-  /// Error message
-  final String message;
-
-  /// Additional context
-  final Map<String, dynamic>? context;
+abstract class EmotionError implements Exception {
 
   const EmotionError(this.message, [this.context]);
 
@@ -12,41 +7,39 @@ abstract class EmotionError {
   factory EmotionError.tooFewRR({
     required int minExpected,
     required int actual,
-  }) {
-    return _TooFewRRError(minExpected, actual);
-  }
+  }) => _TooFewRRError(minExpected, actual);
 
   /// Invalid input data
-  factory EmotionError.badInput(String reason) {
-    return _BadInputError(reason);
-  }
+  factory EmotionError.badInput(String reason) => _BadInputError(reason);
 
   /// Model incompatible with feature dimensions
   factory EmotionError.modelIncompatible({
     required int expectedFeats,
     required int actualFeats,
-  }) {
-    return _ModelIncompatibleError(expectedFeats, actualFeats);
-  }
+  }) => _ModelIncompatibleError(expectedFeats, actualFeats);
 
   /// Feature extraction failed
-  factory EmotionError.featureExtractionFailed(String reason) {
-    return _FeatureExtractionError(reason);
-  }
+  factory EmotionError.featureExtractionFailed(String reason) =>
+      _FeatureExtractionError(reason);
+  /// Error message
+  final String message;
+
+  /// Additional context
+  final Map<String, dynamic>? context;
 
   @override
   String toString() => 'EmotionError: $message';
 }
 
 class _TooFewRRError extends EmotionError {
-  final int minExpected;
-  final int actual;
 
   _TooFewRRError(this.minExpected, this.actual)
     : super(
         'Too few RR intervals: expected at least $minExpected, got $actual',
         {'minExpected': minExpected, 'actual': actual},
       );
+  final int minExpected;
+  final int actual;
 }
 
 class _BadInputError extends EmotionError {
@@ -54,14 +47,15 @@ class _BadInputError extends EmotionError {
 }
 
 class _ModelIncompatibleError extends EmotionError {
-  final int expectedFeats;
-  final int actualFeats;
 
   _ModelIncompatibleError(this.expectedFeats, this.actualFeats)
-    : super(
-        'Model incompatible: expected $expectedFeats features, got $actualFeats',
-        {'expectedFeats': expectedFeats, 'actualFeats': actualFeats},
-      );
+      : super(
+          'Model incompatible: expected $expectedFeats features, '
+          'got $actualFeats',
+          {'expectedFeats': expectedFeats, 'actualFeats': actualFeats},
+        );
+  final int expectedFeats;
+  final int actualFeats;
 }
 
 class _FeatureExtractionError extends EmotionError {

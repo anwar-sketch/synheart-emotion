@@ -1,22 +1,22 @@
 import 'dart:collection';
+
 import 'emotion_config.dart';
-import 'emotion_result.dart';
 import 'emotion_error.dart';
+import 'emotion_result.dart';
 import 'features.dart';
 
 /// Data point for ring buffer
 class _DataPoint {
-  final DateTime timestamp;
-  final double hr;
-  final List<double> rrIntervalsMs;
-  final Map<String, double>? motion;
-
   _DataPoint({
     required this.timestamp,
     required this.hr,
     required this.rrIntervalsMs,
     this.motion,
   });
+  final DateTime timestamp;
+  final double hr;
+  final List<double> rrIntervalsMs;
+  final Map<String, double>? motion;
 }
 
 /// Main emotion inference engine.
@@ -24,22 +24,6 @@ class _DataPoint {
 /// Processes biosignal data using a sliding window approach and produces
 /// emotion predictions at configurable intervals.
 class EmotionEngine {
-  /// Expected number of core HRV features (SDNN, RMSSD, pNN50, Mean_RR, HR_mean).
-  static const int expectedFeatureCount = 5;
-
-  final EmotionConfig config;
-  final dynamic model; // Can be LinearSvmModel or OnnxEmotionModel
-
-  /// Ring buffer for sliding window
-  final Queue<_DataPoint> _buffer = Queue<_DataPoint>();
-
-  /// Last emission timestamp
-  DateTime? _lastEmission;
-
-  /// Logging callback
-  void Function(String level, String message, {Map<String, Object?>? context})?
-  onLog;
-
   EmotionEngine._({required this.config, required this.model, this.onLog});
 
   /// Create engine from pretrained model
@@ -66,6 +50,23 @@ class EmotionEngine {
     return EmotionEngine._(config: config, model: inferenceModel, onLog: onLog);
   }
 
+  /// Expected number of core HRV features
+  /// (SDNN, RMSSD, pNN50, Mean_RR, HR_mean).
+  static const int expectedFeatureCount = 5;
+
+  final EmotionConfig config;
+  final dynamic model; // Can be LinearSvmModel or OnnxEmotionModel
+
+  /// Ring buffer for sliding window
+  final Queue<_DataPoint> _buffer = Queue<_DataPoint>();
+
+  /// Last emission timestamp
+  DateTime? _lastEmission;
+
+  /// Logging callback
+  void Function(String level, String message, {Map<String, Object?>? context})?
+  onLog;
+
   /// Push new data point into the engine
   void push({
     required double hr,
@@ -79,7 +80,9 @@ class EmotionEngine {
           hr > FeatureExtractor.maxValidHr) {
         _log(
           'warn',
-          'Invalid HR value: $hr (valid range: ${FeatureExtractor.minValidHr}-${FeatureExtractor.maxValidHr} BPM)',
+          'Invalid HR value: $hr (valid range: '
+              '${FeatureExtractor.minValidHr}-${FeatureExtractor.maxValidHr} '
+              'BPM)',
         );
         return;
       }
@@ -161,7 +164,8 @@ class EmotionEngine {
 
       _log(
         'info',
-        'Emitted result: ${result.emotion} (${(result.confidence * 100).toStringAsFixed(1)}%)',
+        'Emitted result: ${result.emotion} '
+            '(${(result.confidence * 100).toStringAsFixed(1)}%)',
       );
     } catch (e) {
       _log('error', 'Error during inference: $e');
@@ -172,7 +176,9 @@ class EmotionEngine {
 
   /// Extract features from current window
   Map<String, double>? _extractWindowFeatures() {
-    if (_buffer.isEmpty) return null;
+    if (_buffer.isEmpty) {
+      return null;
+    }
 
     // Collect all HR values and RR intervals in window
     final hrValues = <double>[];
@@ -222,20 +228,25 @@ class EmotionEngine {
   /// Optimized implementation that removes all expired data points
   /// in a single pass to avoid repeated O(n) removeFirst() calls.
   void _trimBuffer() {
-    if (_buffer.isEmpty) return;
+    if (_buffer.isEmpty) {
+      return;
+    }
 
     final cutoffTime = DateTime.now().toUtc().subtract(config.window);
 
     // Find index of first valid data point
-    int firstValidIndex = 0;
+    var firstValidIndex = 0;
     for (final point in _buffer) {
-      if (!point.timestamp.isBefore(cutoffTime)) break;
+      if (!point.timestamp.isBefore(cutoffTime)) {
+        break;
+      }
       firstValidIndex++;
     }
 
     // Remove all expired data points at once if any found
     if (firstValidIndex > 0) {
-      // Rebuild queue with only valid data points (more efficient than repeated removeFirst)
+      // Rebuild queue with only valid data points
+      // (more efficient than repeated removeFirst)
       final validPoints = _buffer.skip(firstValidIndex).toList();
       _buffer
         ..clear()

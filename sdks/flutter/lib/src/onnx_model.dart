@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_onnxruntime/flutter_onnxruntime.dart';
@@ -12,11 +11,6 @@ import 'emotion_error.dart';
 ///
 /// Loads and runs ONNX models with metadata from accompanying meta.json files.
 class OnnxEmotionModel {
-  final String modelId;
-  final List<String> inputNames;
-  final List<String> classNames;
-  final OrtSession _session;
-  final Map<String, dynamic> _metadata;
 
   OnnxEmotionModel._({
     required this.modelId,
@@ -26,6 +20,11 @@ class OnnxEmotionModel {
     required Map<String, dynamic> metadata,
   }) : _session = session,
        _metadata = metadata;
+  final String modelId;
+  final List<String> inputNames;
+  final List<String> classNames;
+  final OrtSession _session;
+  final Map<String, dynamic> _metadata;
 
   /// Load ONNX model from assets
   static Future<OnnxEmotionModel> loadFromAsset({
@@ -115,7 +114,8 @@ class OnnxEmotionModel {
       final inputs = {inputName: inputTensor};
       final outputs = await _session.run(inputs);
 
-      // ExtraTrees ONNX models output: [label, probabilities] or [probabilities, label]
+      // ExtraTrees ONNX models output: [label, probabilities]
+      // or [probabilities, label]
       // We need to find the output with key "probabilities"
       List<double> probabilities;
 
@@ -138,7 +138,7 @@ class OnnxEmotionModel {
         final probsData = await probsValue.asList();
 
         // Handle the shape (1, 3) - first dimension is batch, second is classes
-        if (probsData is List && probsData.isNotEmpty) {
+        if (probsData.isNotEmpty) {
           if (probsData[0] is List) {
             // Nested list [[p1, p2, p3]] - extract inner list
             final innerList = probsData[0] as List;
@@ -160,7 +160,7 @@ class OnnxEmotionModel {
         final outputValue = outputs[outputKey]!;
         final outputData = await outputValue.asList();
 
-        if (outputData is List && outputData.isNotEmpty) {
+        if (outputData.isNotEmpty) {
           if (outputData[0] is List) {
             final innerList = outputData[0] as List;
             probabilities =
@@ -180,7 +180,7 @@ class OnnxEmotionModel {
 
       // Convert to map with class names
       final result = <String, double>{};
-      for (int i = 0; i < classNames.length && i < probabilities.length; i++) {
+      for (var i = 0; i < classNames.length && i < probabilities.length; i++) {
         result[classNames[i]] = probabilities[i];
       }
 

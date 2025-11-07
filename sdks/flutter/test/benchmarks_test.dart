@@ -7,7 +7,7 @@ void main() {
       final hrValues = List.generate(1000, (i) => 70.0 + (i % 20));
 
       final stopwatch = Stopwatch()..start();
-      for (int i = 0; i < 1000; i++) {
+      for (var i = 0; i < 1000; i++) {
         FeatureExtractor.extractHrMean(hrValues);
       }
       stopwatch.stop();
@@ -23,7 +23,7 @@ void main() {
       final rrIntervals = List.generate(100, (i) => 800.0 + (i % 50));
 
       final stopwatch = Stopwatch()..start();
-      for (int i = 0; i < 1000; i++) {
+      for (var i = 0; i < 1000; i++) {
         FeatureExtractor.extractSdnn(rrIntervals);
       }
       stopwatch.stop();
@@ -39,7 +39,7 @@ void main() {
       final rrIntervals = List.generate(100, (i) => 800.0 + (i % 50));
 
       final stopwatch = Stopwatch()..start();
-      for (int i = 0; i < 1000; i++) {
+      for (var i = 0; i < 1000; i++) {
         FeatureExtractor.extractRmssd(rrIntervals);
       }
       stopwatch.stop();
@@ -57,7 +57,7 @@ void main() {
       final motion = {'steps': 100.0};
 
       final stopwatch = Stopwatch()..start();
-      for (int i = 0; i < 1000; i++) {
+      for (var i = 0; i < 1000; i++) {
         FeatureExtractor.extractFeatures(
           hrValues: hrValues,
           rrIntervalsMs: rrIntervals,
@@ -87,9 +87,7 @@ void main() {
     setUp(() {
       engine = EmotionEngine.fromPretrained(
         const EmotionConfig(
-          window: Duration(seconds: 60),
-          step: Duration(seconds: 5),
-          minRrCount: 30,
+          
         ),
       );
     });
@@ -98,7 +96,7 @@ void main() {
       final rrIntervals = List.generate(60, (i) => 800.0 + (i % 50));
 
       final stopwatch = Stopwatch()..start();
-      for (int i = 0; i < 1000; i++) {
+      for (var i = 0; i < 1000; i++) {
         engine.push(
           hr: 70.0 + (i % 20),
           rrIntervalsMs: rrIntervals,
@@ -116,7 +114,7 @@ void main() {
 
     test('Inference cycle performance', () async {
       // Fill buffer with enough data
-      for (int i = 0; i < 10; i++) {
+      for (var i = 0; i < 10; i++) {
         engine.push(
           hr: 70.0 + (i % 20),
           rrIntervalsMs: List.generate(60, (j) => 800.0 + (j % 50)),
@@ -125,7 +123,7 @@ void main() {
       }
 
       final stopwatch = Stopwatch()..start();
-      for (int i = 0; i < 100; i++) {
+      for (var i = 0; i < 100; i++) {
         await engine.consumeReady();
       }
       stopwatch.stop();
@@ -139,7 +137,7 @@ void main() {
 
     test('Memory usage during continuous operation', () async {
       // Simulate 5 minutes of data (600 pushes at 500ms intervals)
-      for (int i = 0; i < 600; i++) {
+      for (var i = 0; i < 600; i++) {
         engine.push(
           hr: 70.0 + (i % 20),
           rrIntervalsMs: List.generate(60, (j) => 800.0 + (j % 50)),

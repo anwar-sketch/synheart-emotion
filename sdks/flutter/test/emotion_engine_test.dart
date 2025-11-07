@@ -84,7 +84,7 @@ void main() {
       expect(statsBefore['count'], equals(0));
 
       engine.push(
-        hr: 70.0,
+        hr: 70,
         rrIntervalsMs: [800.0, 820.0, 810.0],
         timestamp: DateTime.now().toUtc(),
       );
@@ -95,7 +95,7 @@ void main() {
 
     test('consumeReady returns empty list when not enough data', () async {
       engine.push(
-        hr: 70.0,
+        hr: 70,
         rrIntervalsMs: [800.0], // Only 1 RR interval, need 5
         timestamp: DateTime.now().toUtc(),
       );
@@ -106,7 +106,7 @@ void main() {
 
     test('consumeReady returns results when enough data', () async {
       // Add enough data points
-      for (int i = 0; i < 3; i++) {
+      for (var i = 0; i < 3; i++) {
         engine.push(
           hr: 70.0 + i,
           rrIntervalsMs: [800.0, 820.0, 810.0, 830.0, 815.0],
@@ -125,7 +125,7 @@ void main() {
 
     test('clear removes all buffered data', () {
       engine.push(
-        hr: 70.0,
+        hr: 70,
         rrIntervalsMs: [800.0, 820.0, 810.0],
         timestamp: DateTime.now().toUtc(),
       );
@@ -158,7 +158,7 @@ void main() {
 
     test('toJson and fromJson round trip correctly', () {
       final original = EmotionResult.fromInference(
-        timestamp: DateTime(2023, 1, 1, 12, 0, 0),
+        timestamp: DateTime(2023, 1, 1, 12),
         probabilities: {'Calm': 0.8, 'Stressed': 0.2},
         features: {'hr_mean': 70.0},
         model: {'id': 'test'},
@@ -178,8 +178,8 @@ void main() {
       const config = EmotionConfig();
 
       expect(config.modelId, equals('svm_linear_wrist_sdnn_v1_0'));
-      expect(config.window, equals(Duration(seconds: 60)));
-      expect(config.step, equals(Duration(seconds: 5)));
+      expect(config.window, equals(const Duration(seconds: 60)));
+      expect(config.step, equals(const Duration(seconds: 5)));
       expect(config.minRrCount, equals(30));
       expect(config.returnAllProbas, isTrue);
     });
@@ -187,11 +187,11 @@ void main() {
     test('copyWith creates modified copy', () {
       const original = EmotionConfig();
       final modified = original.copyWith(
-        window: Duration(seconds: 30),
+        window: const Duration(seconds: 30),
         minRrCount: 20,
       );
 
-      expect(modified.window, equals(Duration(seconds: 30)));
+      expect(modified.window, equals(const Duration(seconds: 30)));
       expect(modified.minRrCount, equals(20));
       expect(modified.step, equals(original.step)); // Unchanged
     });

@@ -9,7 +9,7 @@ void main() {
   group('Package Structure', () {
     test('package exports are available', () {
       // Verify that core classes are exported
-      expect(() => EmotionConfig(), returnsNormally);
+      expect(EmotionConfig.new, returnsNormally);
       expect(
         () => EmotionEngine.fromPretrained(const EmotionConfig()),
         returnsNormally,

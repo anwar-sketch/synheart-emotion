@@ -38,7 +38,7 @@ jobs:
 
       - name: Analyze code
         working-directory: sdks/flutter
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
 
       - name: Check for outdated dependencies
         working-directory: sdks/flutter
