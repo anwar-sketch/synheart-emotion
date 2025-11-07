@@ -184,15 +184,22 @@ jobs:
 
       - name: Verify SDK path exists
         run: |
+          echo "Repository root: $(pwd)"
+          echo "SDK location:"
           ls -la sdks/flutter/pubspec.yaml || exit 1
-          echo "SDK path verified"
+          echo "Example location:"
+          ls -la examples/flutter/pubspec.yaml || exit 1
+          echo "Path from example to SDK:"
+          cd examples/flutter && ls -la ../../sdks/flutter/pubspec.yaml || exit 1
 
       - name: Install dependencies (example)
         working-directory: examples/flutter
         run: |
-          echo "Current directory: $(pwd)"
-          echo "Checking SDK path:"
+          echo "Working directory: $(pwd)"
+          echo "Resolved SDK path:"
+          realpath ../../sdks/flutter || echo "realpath failed, trying ls:"
           ls -la ../../sdks/flutter/pubspec.yaml || exit 1
+          echo "Running flutter pub get..."
           flutter pub get
 
       - name: Build example app (Android)
