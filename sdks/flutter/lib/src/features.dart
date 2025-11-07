@@ -47,9 +47,8 @@ class FeatureExtractor {
 
     // Calculate standard deviation (sample std, N-1 denominator)
     final mean = cleaned.reduce((a, b) => a + b) / cleaned.length;
-    final variance = cleaned
-            .map((x) => pow(x - mean, 2))
-            .reduce((a, b) => a + b) /
+    final variance =
+        cleaned.map((x) => pow(x - mean, 2)).reduce((a, b) => a + b) /
         (cleaned.length - 1);
     return sqrt(variance);
   }

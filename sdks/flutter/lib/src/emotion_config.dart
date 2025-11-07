@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 /// Configuration for the emotion inference engine
 @immutable
 class EmotionConfig {
-
   const EmotionConfig({
     this.modelId = 'svm_linear_wrist_sdnn_v1_0',
     this.window = const Duration(seconds: 60),
@@ -13,6 +12,7 @@ class EmotionConfig {
     this.hrBaseline,
     this.priors,
   });
+
   /// Model identifier (default: svm_linear_wrist_sdnn_v1_0)
   final String modelId;
 
@@ -44,14 +44,14 @@ class EmotionConfig {
     double? hrBaseline,
     Map<String, double>? priors,
   }) => EmotionConfig(
-      modelId: modelId ?? this.modelId,
-      window: window ?? this.window,
-      step: step ?? this.step,
-      minRrCount: minRrCount ?? this.minRrCount,
-      returnAllProbas: returnAllProbas ?? this.returnAllProbas,
-      hrBaseline: hrBaseline ?? this.hrBaseline,
-      priors: priors ?? this.priors,
-    );
+    modelId: modelId ?? this.modelId,
+    window: window ?? this.window,
+    step: step ?? this.step,
+    minRrCount: minRrCount ?? this.minRrCount,
+    returnAllProbas: returnAllProbas ?? this.returnAllProbas,
+    hrBaseline: hrBaseline ?? this.hrBaseline,
+    priors: priors ?? this.priors,
+  );
 
   @override
   String toString() =>
@@ -75,14 +75,14 @@ class EmotionConfig {
 
   @override
   int get hashCode => Object.hash(
-      modelId,
-      window,
-      step,
-      minRrCount,
-      returnAllProbas,
-      hrBaseline,
-      priors,
-    );
+    modelId,
+    window,
+    step,
+    minRrCount,
+    returnAllProbas,
+    hrBaseline,
+    priors,
+  );
 
   bool _mapEquals(Map<String, double>? a, Map<String, double>? b) {
     if (a == null && b == null) {

@@ -4,7 +4,6 @@ import 'emotion_result.dart';
 
 /// Data tick for streaming
 class Tick {
-
   const Tick({
     required this.timestamp,
     required this.hr,
@@ -19,7 +18,6 @@ class Tick {
 
 /// Stream helper for emotion inference
 class EmotionStream {
-
   EmotionStream(this._engine);
   final EmotionEngine _engine;
   final StreamController<EmotionResult> _controller =

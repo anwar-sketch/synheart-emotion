@@ -85,11 +85,7 @@ void main() {
     late EmotionEngine engine;
 
     setUp(() {
-      engine = EmotionEngine.fromPretrained(
-        const EmotionConfig(
-          
-        ),
-      );
+      engine = EmotionEngine.fromPretrained(const EmotionConfig());
     });
 
     test('Data push performance', () {

@@ -11,7 +11,6 @@ import 'emotion_error.dart';
 ///
 /// Loads and runs ONNX models with metadata from accompanying meta.json files.
 class OnnxEmotionModel {
-
   OnnxEmotionModel._({
     required this.modelId,
     required this.inputNames,
