@@ -92,11 +92,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Copy models to Flutter assets
-        run: |
-          mkdir -p sdks/flutter/assets/ml
-          cp models/*.json sdks/flutter/assets/ml/ 2>/dev/null || echo "⚠️ No models to copy"
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
