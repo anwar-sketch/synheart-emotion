@@ -5,14 +5,15 @@ import 'package:synheart_emotion/synheart_emotion.dart';
 class _MockEmotionModel {
   Future<Map<String, double>> predictAsync(
     Map<String, double> features,
-  ) async =>
-      {'Calm': 0.6, 'Stressed': 0.3, 'Amused': 0.1};
+  ) async => {'Calm': 0.6, 'Stressed': 0.3, 'Amused': 0.1};
 
-  Map<String, double> predict(Map<String, double> features) =>
-      {'Calm': 0.6, 'Stressed': 0.3, 'Amused': 0.1};
+  Map<String, double> predict(Map<String, double> features) => {
+    'Calm': 0.6,
+    'Stressed': 0.3,
+    'Amused': 0.1,
+  };
 
-  Map<String, dynamic> getMetadata() =>
-      {'id': 'mock_model', 'version': '1.0'};
+  Map<String, dynamic> getMetadata() => {'id': 'mock_model', 'version': '1.0'};
 
   @override
   String toString() => 'OnnxEmotionModel';
